@@ -29,12 +29,13 @@
     #app { position: relative; display: none; width: 900px; height: 600px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.13); }
     #app.visible { display: block; }
 
-    #sidebar { width: 240px; height: 100%; background: var(--sidebar-bg); display: flex; flex-direction: column; float: left; }
-    #sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    #sidebar { width: 240px; height: 100%; background: var(--sidebar-bg); display: flex; flex-direction: column; position: absolute; left: 0; top: 0; bottom: 0; z-index: 10; transition: transform .25s ease; }
+    #sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: flex-start; justify-content: space-between; }
     #sidebar-header .app-title { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: .05em; }
     #user-badge { margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); border-radius: 20px; padding: 4px 10px 4px 6px; }
     #user-badge .avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #fff; font-weight: 700; }
     #user-badge span { color: #e2e8f0; font-size: 0.8rem; }
+    #sidebar-close { display: none; background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; padding: 2px; }
     #room-list-header { padding: 14px 16px 6px; color: #94a3b8; font-size: 0.72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     #room-list { flex: 1; overflow-y: auto; padding: 4px 8px; }
     .room-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 9px; cursor: pointer; color: var(--sidebar-text); font-size: 0.9rem; transition: background .15s; margin-bottom: 2px; position: relative; }
@@ -54,50 +55,66 @@
     #logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
 
     #chat-area { background: var(--surface); display: flex; flex-direction: column; position: absolute; left: 240px; right: 0; top: 0; bottom: 0; }
-    #chat-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    #chat-header .room-name { font-weight: 700; font-size: 1rem; color: var(--text); }
-    #online-count { margin-left: auto; font-size: 0.78rem; color: var(--text-muted); background: var(--bg); border-radius: 20px; padding: 4px 10px; }
-    #messages { flex: 1; overflow-y: auto; padding: 20px 20px 10px; display: flex; flex-direction: column; gap: 8px; }
+    #chat-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    #menu-btn { display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); padding: 2px 6px; border-radius: 6px; }
+    #chat-header .room-name { font-weight: 700; font-size: 1rem; color: var(--text); flex: 1; }
+    #online-count { font-size: 0.75rem; color: var(--text-muted); background: var(--bg); border-radius: 20px; padding: 4px 10px; white-space: nowrap; }
+    #messages { flex: 1; overflow-y: auto; padding: 16px 16px 8px; display: flex; flex-direction: column; gap: 8px; -webkit-overflow-scrolling: touch; }
     #messages::-webkit-scrollbar { width: 4px; }
     #messages::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
     .msg-group { display: flex; flex-direction: column; gap: 2px; }
     .msg-group.me { align-items: flex-end; }
     .msg-group.other { align-items: flex-start; }
     .msg-sender { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 3px; padding: 0 4px; }
-    .bubble { max-width: 65%; padding: 9px 14px; border-radius: 16px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; }
+    .bubble { max-width: 75%; padding: 9px 14px; border-radius: 16px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; }
     .msg-group.me .bubble { background: var(--bubble-me); color: var(--bubble-me-text); border-bottom-right-radius: 4px; }
     .msg-group.other .bubble { background: var(--bubble-other); color: var(--bubble-other-text); border-bottom-left-radius: 4px; }
     .msg-time { font-size: 0.68rem; color: var(--text-muted); padding: 0 4px; margin-top: 2px; }
     .system-msg { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin: 4px 0; }
     #no-room-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); gap: 8px; }
     #no-room-state .icon { font-size: 2.5rem; }
-    #input-area { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    #msg-input { flex: 1; padding: 10px 16px; border: 1.5px solid var(--border); border-radius: 24px; font-size: 0.92rem; font-family: inherit; outline: none; background: var(--input-bg); transition: border-color .2s; }
+    #input-area { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: var(--surface); }
+    #msg-input { flex: 1; min-width: 0; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 24px; font-size: 0.92rem; font-family: inherit; outline: none; background: var(--input-bg); transition: border-color .2s; }
     #msg-input:focus { border-color: var(--accent); }
-    #send-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background .2s; flex-shrink: 0; }
+    #send-btn { width: 42px; height: 42px; min-width: 42px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: background .2s; flex-shrink: 0; }
     #send-btn:hover { background: var(--accent-dark); }
 
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.open { display: flex; }
-    .modal-box { background: #fff; border-radius: 16px; padding: 28px; width: 320px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
+    .modal-box { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 320px; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
     .modal-box h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); }
     .modal-box input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.92rem; font-family: inherit; outline: none; background: var(--input-bg); margin-bottom: 10px; transition: border-color .2s; }
     .modal-box input:focus { border-color: var(--accent); }
     .modal-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; margin-top: -6px; }
     .modal-btns { display: flex; gap: 8px; margin-top: 4px; }
-    .modal-btns button { flex: 1; padding: 10px; border-radius: 9px; border: none; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; }
+    .modal-btns button { flex: 1; padding: 11px; border-radius: 9px; border: none; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; }
     .btn-cancel { background: var(--bg); color: var(--text-muted); }
     .btn-confirm { background: var(--accent); color: #fff; }
     .btn-confirm:hover { background: var(--accent-dark); }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-danger:hover { background: #dc2626; }
-
     #pw-modal .lock { font-size: 2rem; margin-bottom: 8px; text-align: center; }
     #pw-modal h2 { text-align: center; }
     #pw-modal p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; text-align: center; }
     #pw-input { text-align: center; letter-spacing: 2px; }
     #pw-error { font-size: 0.8rem; color: var(--danger); margin-bottom: 10px; min-height: 18px; text-align: center; }
     #del-modal p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+
+    #sidebar-overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 9; }
+
+    @media (max-width: 640px) {
+      body { align-items: stretch; justify-content: stretch; background: var(--surface); }
+      #login-screen { width: 100%; height: 100vh; border-radius: 0; padding: 60px 28px 40px; display: flex; flex-direction: column; justify-content: center; box-shadow: none; }
+      #app { width: 100%; height: 100vh; border-radius: 0; box-shadow: none; }
+      #sidebar { width: 280px; transform: translateX(-100%); box-shadow: 4px 0 20px rgba(0,0,0,0.2); }
+      #sidebar.open { transform: translateX(0); }
+      #sidebar-overlay.open { display: block; }
+      #sidebar-close { display: block; }
+      #chat-area { left: 0; right: 0; }
+      #menu-btn { display: block; }
+      .bubble { max-width: 85%; }
+      #input-area { padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+    }
   </style>
 </head>
 <body>
@@ -111,13 +128,18 @@
 </div>
 
 <div id="app">
+  <div id="sidebar-overlay"></div>
+
   <div id="sidebar">
     <div id="sidebar-header">
-      <div class="app-title">💬 CHATCHAT</div>
-      <div id="user-badge">
-        <div class="avatar" id="user-avatar"></div>
-        <span id="user-name-display"></span>
+      <div>
+        <div class="app-title">💬 CHATCHAT</div>
+        <div id="user-badge">
+          <div class="avatar" id="user-avatar"></div>
+          <span id="user-name-display"></span>
+        </div>
       </div>
+      <button id="sidebar-close">✕</button>
     </div>
     <div id="room-list-header">채팅방</div>
     <div id="room-list"></div>
@@ -127,23 +149,24 @@
 
   <div id="chat-area">
     <div id="chat-header">
+      <button id="menu-btn">☰</button>
       <div class="room-name" id="current-room-name">채팅방을 선택하세요</div>
       <div id="online-count" style="display:none"></div>
     </div>
     <div id="messages">
       <div id="no-room-state">
         <div class="icon">👈</div>
-        <p>왼쪽에서 채팅방을 선택하거나 만들어보세요</p>
+        <p>채팅방을 선택하거나 만들어보세요</p>
       </div>
     </div>
     <div id="input-area" style="display:none">
-      <input type="text" id="msg-input" placeholder="메시지 입력..."/>
+      <input type="text" id="msg-input" placeholder="메시지 입력..." autocomplete="off"/>
       <button id="send-btn">➤</button>
     </div>
   </div>
 </div>
 
-<!-- 채팅방 만들기 모달 -->
+<!-- 채팅방 만들기 -->
 <div id="create-modal" class="modal-overlay">
   <div class="modal-box">
     <h2>새 채팅방 만들기</h2>
@@ -158,7 +181,7 @@
   </div>
 </div>
 
-<!-- 채팅방 설정 모달 -->
+<!-- 채팅방 설정 -->
 <div id="edit-modal" class="modal-overlay">
   <div class="modal-box">
     <h2>⚙️ 채팅방 설정</h2>
@@ -173,7 +196,7 @@
   </div>
 </div>
 
-<!-- 삭제 확인 모달 -->
+<!-- 삭제 확인 -->
 <div id="del-modal" class="modal-overlay">
   <div class="modal-box">
     <h2>🗑️ 채팅방 삭제</h2>
@@ -185,7 +208,7 @@
   </div>
 </div>
 
-<!-- 비밀번호 입력 모달 -->
+<!-- 비밀번호 입력 -->
 <div id="pw-modal" class="modal-overlay">
   <div class="modal-box">
     <div class="lock">🔒</div>
@@ -218,13 +241,8 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  let currentUser = null;
-  let currentRoomId = null;
-  let messageListener = null;
-  let presenceRef = null;
-  let pendingRoom = null;
-  let editingRoomId = null;
-  let deletingRoomId = null;
+  let currentUser = null, currentRoomId = null, messageListener = null;
+  let presenceRef = null, pendingRoom = null, editingRoomId = null, deletingRoomId = null;
 
   const fmt = ts => ts ? new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
   const escHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -241,7 +259,14 @@
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
   });
 
-  // 로그인
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
+  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+  document.getElementById('menu-btn').addEventListener('click', openSidebar);
+  document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+  overlay.addEventListener('click', closeSidebar);
+
   document.getElementById('login-btn').addEventListener('click', login);
   document.getElementById('nickname-input').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
@@ -263,13 +288,13 @@
     document.getElementById('login-screen').style.display = '';
     document.getElementById('nickname-input').value = '';
     document.getElementById('room-list').innerHTML = '';
-    document.getElementById('messages').innerHTML = `<div id="no-room-state"><div class="icon">👈</div><p>왼쪽에서 채팅방을 선택하거나 만들어보세요</p></div>`;
+    document.getElementById('messages').innerHTML = `<div id="no-room-state"><div class="icon">👈</div><p>채팅방을 선택하거나 만들어보세요</p></div>`;
     document.getElementById('input-area').style.display = 'none';
     document.getElementById('current-room-name').textContent = '채팅방을 선택하세요';
     document.getElementById('online-count').style.display = 'none';
+    closeSidebar();
   });
 
-  // 채팅방 목록
   function loadRooms() {
     onValue(ref(db, 'rooms'), snap => {
       const list = document.getElementById('room-list');
@@ -291,13 +316,12 @@
           </span>`;
         item.querySelector('.edit').addEventListener('click', e => { e.stopPropagation(); openEditModal(id, room); });
         item.querySelector('.del').addEventListener('click', e => { e.stopPropagation(); openDelModal(id, room); });
-        item.addEventListener('click', () => tryEnterRoom(id, room));
+        item.addEventListener('click', () => { tryEnterRoom(id, room); closeSidebar(); });
         list.appendChild(item);
       });
     });
   }
 
-  // 채팅방 입장
   function tryEnterRoom(roomId, room) {
     if (currentRoomId === roomId) return;
     if (room.password) {
@@ -344,7 +368,7 @@
 
     onValue(ref(db, `presence/${roomId}`), snap => {
       const count = snap.exists() ? Object.keys(snap.val()).length : 0;
-      document.getElementById('online-count').textContent = `🟢 ${count}명 접속 중`;
+      document.getElementById('online-count').textContent = `🟢 ${count}명`;
     });
 
     if (messageListener) messageListener();
@@ -354,7 +378,7 @@
     messageListener = onValue(ref(db, `messages/${roomId}`), snap => {
       messagesDiv.innerHTML = '';
       if (!snap.exists()) {
-        messagesDiv.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">첫 메시지를 보내보세요! 💬</div>`;
+        messagesDiv.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:0.9rem;">첫 메시지를 보내보세요! 💬</div>`;
         return;
       }
       let prevSender = null;
@@ -385,7 +409,6 @@
     push(ref(db, `messages/${roomId}`), { type: 'system', text: `${currentUser}님이 입장했습니다`, ts: Date.now() });
   }
 
-  // 메시지 전송
   document.getElementById('send-btn').addEventListener('click', sendMsg);
   document.getElementById('msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 
@@ -397,11 +420,8 @@
     input.value = '';
   }
 
-  // 채팅방 만들기
   document.getElementById('add-room-btn').addEventListener('click', () => {
-    document.getElementById('modal-room-name').value = '';
-    document.getElementById('modal-room-emoji').value = '';
-    document.getElementById('modal-room-pw').value = '';
+    ['modal-room-name','modal-room-emoji','modal-room-pw'].forEach(id => document.getElementById(id).value = '');
     openModal('create-modal');
     setTimeout(() => document.getElementById('modal-room-name').focus(), 100);
   });
@@ -420,7 +440,6 @@
     closeModal('create-modal');
   }
 
-  // 채팅방 수정
   function openEditModal(roomId, room) {
     editingRoomId = roomId;
     document.getElementById('edit-room-name').value = room.name;
@@ -438,14 +457,12 @@
     const emoji = document.getElementById('edit-room-emoji').value.trim() || '💬';
     const pw = document.getElementById('edit-room-pw').value.trim();
     if (!name) return;
-    const updates = { name, emoji };
-    updates.password = pw ? await hashPw(pw) : '';
+    const updates = { name, emoji, password: pw ? await hashPw(pw) : '' };
     await update(ref(db, `rooms/${editingRoomId}`), updates);
     closeModal('edit-modal');
     editingRoomId = null;
   }
 
-  // 채팅방 삭제
   function openDelModal(roomId, room) {
     deletingRoomId = roomId;
     document.getElementById('del-modal-desc').textContent = `"${room.name}" 채팅방을 삭제하면 모든 메시지가 사라져요. 정말 삭제할까요?`;
@@ -460,7 +477,7 @@
     if (currentRoomId === deletingRoomId) {
       currentRoomId = null;
       if (messageListener) { messageListener(); messageListener = null; }
-      document.getElementById('messages').innerHTML = `<div id="no-room-state"><div class="icon">👈</div><p>왼쪽에서 채팅방을 선택하거나 만들어보세요</p></div>`;
+      document.getElementById('messages').innerHTML = `<div id="no-room-state"><div class="icon">👈</div><p>채팅방을 선택하거나 만들어보세요</p></div>`;
       document.getElementById('input-area').style.display = 'none';
       document.getElementById('current-room-name').textContent = '채팅방을 선택하세요';
       document.getElementById('online-count').style.display = 'none';
