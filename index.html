@@ -8,219 +8,360 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
+      --app-bg: #f6f6f6;
+      --canvas: #ffffff;
+      --gray-50: #fafafa;
       --gray-100: #f3f3f3;
-      --gray-200: #e8e8e8;
-      --gray-300: #d4d4d4;
-      --gray-400: #b0b0b0;
-      --gray-500: #888888;
-      --gray-600: #606060;
-      --gray-700: #404040;
-      --gray-800: #2a2a2a;
-      --gray-900: #1a1a1a;
-      --text: #1f1f1f;
+      --gray-150: #eeeeee;
+      --gray-200: #e7e7e7;
+      --gray-250: #dddddd;
+      --gray-300: #d0d0d0;
+      --gray-400: #b8b8b8;
+      --gray-500: #8d8d8d;
+      --gray-600: #666666;
+      --gray-700: #444444;
+      --gray-800: #2d2d2d;
+      --text: #202020;
       --text-muted: #666666;
-      --border: #d4d4d4;
-      --border-dark: #b0b0b0;
+      --border: #d0d0d0;
+      --border-dark: #b7b7b7;
       --row-even: #ffffff;
-      --row-odd: #f9f9f9;
-      --row-hover: #f0f0f0;
-      --danger: #c0392b;
-      --system: #999;
+      --row-odd: #fbfbfb;
+      --row-hover: #f1f1f1;
+      --danger: #b13a32;
+      --system: #8a8a8a;
       --green: #217346;
       --green-hover: #185a37;
-      --green-light: #e8f4ec;
+      --green-light: #edf6f0;
+      --top-h: 116px;
+      --status-h: 22px;
     }
 
-    html, body { height: 100%; }
-    body { font-family: 'Noto Sans KR', 'Segoe UI', sans-serif; background: #999; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
+      background: #9b9b9b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      overflow: hidden;
+      color: var(--text);
+    }
 
     /* 로그인 */
-    #login-screen { background: #fff; border: 1px solid var(--border-dark); box-shadow: 2px 2px 8px rgba(0,0,0,0.2); width: 340px; overflow: hidden; }
-    #login-title-bar { background: var(--gray-200); color: var(--text); padding: 9px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); }
+    #login-screen {
+      background: #fff;
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+      width: 340px;
+      overflow: hidden;
+    }
+    #login-title-bar {
+      background: linear-gradient(#eeeeee, #e2e2e2);
+      color: var(--text);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
     #login-body { padding: 28px 24px 24px; }
     #login-body .field-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-    #login-body input { width: 100%; padding: 5px 8px; border: 1px solid var(--border-dark); font-size: 13px; font-family: inherit; outline: none; margin-bottom: 14px; }
-    #login-body input:focus { border-color: var(--green); outline: 1px solid var(--green); }
-    #login-btn { background: var(--green); color: #fff; border: none; padding: 6px 20px; font-size: 12px; font-family: inherit; cursor: pointer; font-weight: 600; }
-    #login-btn:hover { background: var(--green-hover); }
+    #login-body input {
+      width: 100%; padding: 6px 8px; border: 1px solid var(--border-dark);
+      font-size: 13px; font-family: inherit; outline: none; margin-bottom: 14px; background: #fff;
+    }
+    #login-body input:focus { border-color: var(--green); outline: 1px solid rgba(33,115,70,.25); }
+    #login-btn {
+      background: #fff; color: var(--green); border: 1px solid var(--green);
+      padding: 5px 18px; font-size: 12px; font-family: inherit; cursor: pointer; font-weight: 700;
+    }
+    #login-btn:hover { background: var(--green-light); }
 
-    /* 앱 */
-    #app { display: none; width: 1020px; height: 720px; border: 1px solid var(--border-dark); box-shadow: 2px 2px 12px rgba(0,0,0,0.3); flex-direction: row; background: #fff; position: relative; overflow: hidden; }
+    /* 앱: 데스크톱 전체 화면 */
+    #app {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      border: none;
+      box-shadow: none;
+      flex-direction: row;
+      background: var(--canvas);
+      position: relative;
+      overflow: hidden;
+    }
     #app.visible { display: flex; }
 
-    /* 상단 */
-    #top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 20; }
-
-    /* 1행: 타이틀 */
-    #title-row { background: var(--gray-200); height: 28px; display: flex; align-items: center; padding: 0 8px; gap: 4px; border-bottom: 1px solid var(--border); }
-    .xl-icon { font-size: 13px; margin-right: 4px; }
-    .qat-btn { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-700); cursor: default; border-radius: 2px; }
-    .qat-btn:hover { background: var(--gray-300); }
-    .qat-sep { color: var(--gray-400); font-size: 10px; margin: 0 2px; }
-    #title-center { flex: 1; text-align: center; color: var(--text); font-size: 12px; }
+    /* 상단: 엑셀 느낌만 남긴 슬림 헤더 */
+    #top-bar {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+      background: var(--gray-100); border-bottom: 1px solid var(--border-dark);
+    }
+    #title-row {
+      background: linear-gradient(#eeeeee, #e2e2e2);
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--gray-700);
+    }
+    .workbook-mark { display: flex; align-items: center; gap: 7px; min-width: 190px; font-size: 12px; font-weight: 600; }
+    .xl-file-icon { width: 14px; height: 14px; border: 1px solid var(--green); background: #fff; position: relative; display: inline-block; }
+    .xl-file-icon::before { content: ''; position: absolute; left: 3px; top: 2px; width: 1px; height: 8px; background: var(--green); box-shadow: 4px 0 0 var(--green), 8px 0 0 var(--green); opacity: .75; }
+    .xl-file-icon::after { content: ''; position: absolute; left: 2px; top: 4px; width: 8px; height: 1px; background: var(--green); box-shadow: 0 4px 0 var(--green); opacity: .75; }
+    #title-center { flex: 1; text-align: center; color: var(--gray-600); font-size: 12px; }
     .user-section { display: flex; align-items: center; gap: 6px; }
-    #user-chip { color: var(--gray-700); font-size: 11px; display: flex; align-items: center; gap: 5px; padding: 2px 6px; }
-    #user-chip .avatar { width: 16px; height: 16px; background: var(--gray-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; }
-    #logout-btn { background: var(--green); color: #fff; border: none; padding: 2px 8px; font-size: 11px; font-family: inherit; cursor: pointer; border-radius: 2px; }
-    #logout-btn:hover { background: var(--green-hover); }
-    #menu-btn { display: none; background: none; border: none; color: var(--gray-700); font-size: 1rem; cursor: pointer; padding: 2px 6px; }
-    .win-btns { display: flex; }
-    .win-btn { width: 40px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-700); cursor: default; }
+    #user-chip { color: var(--gray-700); font-size: 11px; display: flex; align-items: center; gap: 6px; padding: 2px 6px; }
+    #user-chip .avatar {
+      width: 18px; height: 18px; background: var(--gray-500); border-radius: 2px;
+      display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff;
+    }
+    #logout-btn {
+      background: transparent; color: var(--green); border: 1px solid transparent;
+      padding: 3px 8px; font-size: 11px; font-family: inherit; cursor: pointer; font-weight: 700; border-radius: 2px;
+    }
+    #logout-btn:hover { background: var(--green-light); border-color: rgba(33,115,70,.25); }
+    #menu-btn { display: none; background: none; border: none; color: var(--green); font-size: 1rem; cursor: pointer; padding: 2px 6px; }
+    .win-btns { display: flex; margin-right: -8px; }
+    .win-btn { width: 42px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-700); cursor: default; }
     .win-btn:hover { background: var(--gray-300); }
-    .win-btn.close:hover { background: #c0392b; color: #fff; }
+    .win-btn.close:hover { background: #c42b1c; color: #fff; }
 
-    /* 2행: 메뉴탭 */
-    #menu-row { background: #fff; height: 28px; display: flex; align-items: center; padding: 0 4px; border-bottom: 1px solid var(--border); }
-    .menu-tab { font-size: 12px; padding: 0 12px; height: 28px; display: flex; align-items: center; cursor: default; color: var(--text); white-space: nowrap; border-bottom: 2px solid transparent; }
+    #menu-row {
+      background: #fbfbfb;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+    #menu-row::-webkit-scrollbar { display: none; }
+    .menu-tab {
+      font-size: 12px;
+      padding: 0 11px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      cursor: default;
+      color: var(--gray-700);
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
     .menu-tab:hover { background: var(--gray-100); }
-    .menu-tab.active { color: var(--gray-900); font-weight: 600; border-bottom: 2px solid var(--gray-600); }
+    .menu-tab.active { color: var(--text); font-weight: 600; border-bottom-color: var(--gray-500); background: #fff; }
 
-    /* 3행: 리본 */
-    #ribbon-content { background: #fff; border-bottom: 1px solid var(--border); padding: 4px 8px 0; display: flex; align-items: flex-end; min-height: 64px; }
-    .ribbon-group { display: flex; flex-direction: column; align-items: stretch; padding: 0 8px 4px; border-right: 1px solid var(--border); }
-    .ribbon-group:last-child { border-right: none; }
-    .ribbon-group-btns { display: flex; gap: 1px; align-items: flex-end; flex: 1; }
-    .ribbon-group-label { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 3px; padding-top: 2px; border-top: 1px solid var(--border); white-space: nowrap; }
-    .rb-btn { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 5px 3px; cursor: default; border: 1px solid transparent; border-radius: 2px; min-width: 38px; }
-    .rb-btn:hover { background: var(--gray-100); border-color: var(--border-dark); }
-    .rb-icon { font-size: 17px; line-height: 1; }
-    .rb-label { font-size: 10px; color: var(--text); white-space: nowrap; }
-    .rb-btn-lg { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 4px 8px 3px; cursor: default; border: 1px solid transparent; border-radius: 2px; min-width: 50px; }
-    .rb-btn-lg:hover { background: var(--gray-100); border-color: var(--border-dark); }
-    .rb-icon-lg { font-size: 24px; line-height: 1; }
-    .rb-label-lg { font-size: 10px; color: var(--text); white-space: nowrap; }
-    .rb-col { display: flex; flex-direction: column; gap: 1px; }
-    .rb-sm { display: flex; align-items: center; gap: 4px; padding: 2px 5px; cursor: default; border: 1px solid transparent; border-radius: 2px; font-size: 11px; color: var(--text); white-space: nowrap; }
-    .rb-sm:hover { background: var(--gray-100); border-color: var(--border-dark); }
-    .rb-divider { width: 1px; background: var(--border); height: 44px; margin: 0 2px; align-self: flex-start; margin-top: 4px; }
-    .font-row { display: flex; align-items: center; gap: 2px; margin-bottom: 2px; }
-    .font-box { border: 1px solid var(--border-dark); padding: 1px 4px; font-size: 11px; color: var(--text); min-width: 96px; cursor: default; background: #fff; }
-    .size-box { border: 1px solid var(--border-dark); padding: 1px 4px; font-size: 11px; color: var(--text); width: 34px; cursor: default; background: #fff; }
-    .fmt-btn { border: 1px solid var(--border); padding: 1px 5px; font-size: 12px; cursor: default; background: #fff; }
-    .fmt-btn:hover { background: var(--gray-100); border-color: var(--border-dark); }
+    #ribbon-content {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      height: 34px;
+      min-height: 34px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+    .compact-group { display: flex; align-items: center; gap: 5px; padding-right: 10px; border-right: 1px solid var(--border); min-width: 0; }
+    .compact-group:last-child { border-right: none; }
+    .compact-label { font-size: 10px; color: var(--text-muted); margin-right: 2px; white-space: nowrap; }
+    .tool-chip {
+      height: 22px; min-width: 24px; padding: 0 7px; border: 1px solid var(--border); background: var(--gray-50);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-700); white-space: nowrap;
+    }
+    .tool-chip.small { width: 24px; padding: 0; font-weight: 700; }
+    .tool-chip.select { min-width: 72px; justify-content: space-between; }
+    .tool-chip.muted { color: var(--gray-500); background: #fff; }
+    .tool-chip.functional { color: var(--green); border-color: rgba(33,115,70,.35); background: #fff; font-weight: 700; }
 
-    /* 4행: 수식입력줄 */
-    #formula-row { background: #fff; height: 22px; display: flex; align-items: center; border-bottom: 1px solid var(--border-dark); }
-    #name-box { width: 72px; border-right: 1px solid var(--border-dark); padding: 0 6px; font-size: 11px; color: var(--text); height: 100%; display: flex; align-items: center; flex-shrink: 0; }
-    #formula-fx { width: 28px; border-right: 1px solid var(--border); padding: 0 6px; font-size: 12px; font-style: italic; color: var(--gray-600); height: 100%; display: flex; align-items: center; flex-shrink: 0; font-weight: 700; }
-    #formula-display { flex: 1; padding: 0 6px; font-size: 11px; color: var(--text-muted); height: 100%; display: flex; align-items: center; }
+    #formula-row {
+      background: #fff;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border-dark);
+    }
+    #name-box {
+      width: 72px; border-right: 1px solid var(--border-dark); padding: 0 8px;
+      font-size: 11px; color: var(--text); height: 100%; display: flex; align-items: center; flex-shrink: 0; background: var(--gray-50);
+    }
+    #formula-fx {
+      width: 34px; border-right: 1px solid var(--border); padding: 0 6px; font-size: 12px; font-style: italic;
+      color: var(--gray-600); height: 100%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700;
+    }
+    #formula-display { flex: 1; padding: 0 8px; font-size: 11px; color: var(--text-muted); height: 100%; display: flex; align-items: center; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-    .top-height { margin-top: 143px; }
+    .top-height { margin-top: var(--top-h); margin-bottom: var(--status-h); }
 
-    /* 사이드바 */
-    #sidebar { width: 180px; flex-shrink: 0; background: var(--gray-700); display: flex; flex-direction: column; position: relative; z-index: 10; transition: transform .25s ease; }
-    #sidebar-header { background: var(--gray-800); padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
-    #sidebar-header .label { color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    #sidebar-close { display: none; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1rem; cursor: pointer; }
-    #room-list { flex: 1; overflow-y: auto; padding: 4px 0; }
-    #room-list::-webkit-scrollbar { width: 4px; }
-    #room-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
-    .room-item { display: flex; align-items: center; gap: 7px; padding: 6px 10px; cursor: pointer; color: rgba(255,255,255,0.8); font-size: 12px; border-left: 3px solid transparent; transition: background .1s; }
-    .room-item:hover { background: rgba(255,255,255,0.07); }
-    .room-item.active { background: rgba(255,255,255,0.12); border-left-color: #fff; font-weight: 600; color: #fff; }
-    .room-item .room-icon { font-size: 0.85rem; flex-shrink: 0; }
+    /* 시트 목록: 어두운 패널 대신 엑셀식 밝은 패널 */
+    #sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--gray-100);
+      border-right: 1px solid var(--border-dark);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 10;
+      transition: transform .25s ease;
+      min-height: 0;
+    }
+    #sidebar-header {
+      background: var(--gray-200);
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+    }
+    #sidebar-header .label { color: var(--gray-700); font-size: 11px; font-weight: 700; letter-spacing: .02em; }
+    #sidebar-close { display: none; background: none; border: none; color: var(--gray-600); font-size: 1rem; cursor: pointer; }
+    #room-list { flex: 1; overflow-y: auto; padding: 5px 0; min-height: 0; }
+    #room-list::-webkit-scrollbar { width: 10px; }
+    #room-list::-webkit-scrollbar-track { background: var(--gray-100); }
+    #room-list::-webkit-scrollbar-thumb { background: var(--gray-300); border: 2px solid var(--gray-100); }
+    .room-item {
+      display: flex; align-items: center; gap: 7px; padding: 7px 10px; cursor: pointer;
+      color: var(--gray-700); font-size: 12px; border-left: 3px solid transparent; transition: background .1s;
+    }
+    .room-item:hover { background: #fff; }
+    .room-item.active { background: #fff; border-left-color: var(--green); font-weight: 700; color: var(--text); }
+    .room-item .room-icon { font-size: 0.9rem; flex-shrink: 0; filter: grayscale(1); opacity: .8; }
     .room-item .room-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .room-item .lock-icon { font-size: 0.6rem; opacity: 0.45; }
+    .room-item .lock-icon { font-size: 0.7rem; opacity: 0.5; filter: grayscale(1); }
     .room-item .room-actions { display: none; gap: 1px; }
     .room-item:hover .room-actions { display: flex; }
-    .room-action-btn { background: none; border: none; cursor: pointer; font-size: 0.7rem; padding: 1px 3px; color: rgba(255,255,255,0.4); border-radius: 2px; }
-    .room-action-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .room-action-btn.del:hover { background: rgba(192,57,43,0.35); color: #ffaaaa; }
-    #add-room-btn { margin: 6px 8px; padding: 6px 10px; background: var(--green); border: none; color: #fff; font-size: 11px; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: 600; }
-    #add-room-btn:hover { background: var(--green-hover); }
+    .room-action-btn { background: transparent; border: none; cursor: pointer; font-size: 0.75rem; padding: 2px 4px; color: var(--green); border-radius: 2px; }
+    .room-action-btn:hover { background: var(--green-light); }
+    .room-action-btn.del { color: var(--danger); }
+    .room-action-btn.del:hover { background: #f8e9e8; }
+    #add-room-btn {
+      margin: 8px;
+      padding: 7px 10px;
+      background: #fff;
+      border: 1px solid rgba(33,115,70,.45);
+      color: var(--green);
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-weight: 700;
+    }
+    #add-room-btn:hover { background: var(--green-light); }
 
-    /* 채팅 */
-    #chat-area { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; overflow: hidden; }
-    #col-header { background: var(--gray-200); border-bottom: 1px solid var(--border-dark); display: flex; align-items: center; height: 22px; flex-shrink: 0; }
-    .col-A { width: 36px; min-width: 36px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
-    .col-B { width: 64px; min-width: 64px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
-    .col-C { width: 80px; min-width: 80px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
-    .col-D { flex: 1; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; padding: 0 8px; }
-    #online-count { font-size: 10px; color: var(--text-muted); background: var(--gray-100); border: 1px solid var(--border); padding: 1px 6px; }
+    /* 채팅 시트 */
+    #chat-area { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; overflow: hidden; min-height: 0; }
+    #col-header { background: var(--gray-200); border-bottom: 1px solid var(--border-dark); display: flex; align-items: center; height: 24px; flex-shrink: 0; }
+    .col-A { width: 40px; min-width: 40px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
+    .col-B { width: 72px; min-width: 72px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
+    .col-C { width: 96px; min-width: 96px; border-right: 1px solid var(--border); font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 100%; }
+    .col-D { flex: 1; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; padding: 0 8px; min-width: 0; }
+    #current-room-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    #online-count { font-size: 10px; color: var(--green); background: #fff; border: 1px solid rgba(33,115,70,.25); padding: 1px 6px; }
     #messages { flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; min-height: 0; }
     #messages::-webkit-scrollbar { width: 12px; }
     #messages::-webkit-scrollbar-track { background: var(--gray-100); border-left: 1px solid var(--border); }
     #messages::-webkit-scrollbar-thumb { background: var(--gray-300); border: 2px solid var(--gray-100); }
-    .msg-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--border); min-height: 22px; }
+    .msg-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--border); min-height: 24px; }
     .msg-row:nth-child(even) { background: var(--row-odd); }
     .msg-row:nth-child(odd) { background: var(--row-even); }
     .msg-row:hover { background: var(--row-hover); }
-    .row-num { width: 36px; min-width: 36px; background: var(--gray-200); border-right: 1px solid var(--border-dark); color: var(--text-muted); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .row-num { width: 40px; min-width: 40px; background: var(--gray-200); border-right: 1px solid var(--border-dark); color: var(--text-muted); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .msg-row:hover .row-num { background: var(--gray-300); color: var(--gray-800); font-weight: 600; }
-    .cell-time { width: 64px; min-width: 64px; border-right: 1px solid var(--border); padding: 3px 6px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; flex-shrink: 0; }
-    .cell-sender { width: 80px; min-width: 80px; border-right: 1px solid var(--border); padding: 3px 6px; font-size: 11px; font-weight: 600; display: flex; align-items: center; overflow: hidden; flex-shrink: 0; }
+    .cell-time { width: 72px; min-width: 72px; border-right: 1px solid var(--border); padding: 3px 6px; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; flex-shrink: 0; }
+    .cell-sender { width: 96px; min-width: 96px; border-right: 1px solid var(--border); padding: 3px 6px; font-size: 11px; font-weight: 600; display: flex; align-items: center; overflow: hidden; flex-shrink: 0; white-space: nowrap; text-overflow: ellipsis; }
     .cell-sender.me { color: var(--green); }
     .cell-sender.other { color: var(--gray-700); }
     .cell-sender.system-sender { color: var(--system); font-weight: 400; font-style: italic; font-size: 10px; }
-    .cell-msg { flex: 1; padding: 3px 8px; font-size: 12px; color: var(--text); word-break: break-word; line-height: 1.5; display: flex; align-items: center; }
-    .cell-msg.me { background: var(--green-light); color: #1a3a28; }
+    .cell-msg { flex: 1; padding: 3px 8px; font-size: 12px; color: var(--text); word-break: break-word; line-height: 1.5; display: flex; align-items: center; min-width: 0; }
+    .cell-msg.me { background: var(--green-light); color: #1f3a2a; }
     .cell-msg.system-msg-cell { color: var(--system); font-style: italic; font-size: 10px; }
     #no-room-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); gap: 10px; }
-    #no-room-state .xl-logo { font-size: 2.5rem; }
+    #no-room-state .xl-logo { font-size: 2.5rem; filter: grayscale(1); opacity: .65; }
     #no-room-state p { font-size: 12px; }
 
-    /* 시트탭 */
-    #sheet-tab-bar { height: 22px; background: var(--gray-100); border-top: 1px solid var(--border-dark); display: flex; align-items: center; padding: 0 8px; flex-shrink: 0; }
-    .sheet-nav { display: flex; gap: 1px; margin-right: 8px; }
-    .sheet-nav-btn { width: 18px; height: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: #fff; cursor: default; font-size: 9px; color: var(--text-muted); }
+    #sheet-tab-bar { height: 26px; background: var(--gray-100); border-top: 1px solid var(--border-dark); display: flex; align-items: flex-end; padding: 0 8px; flex-shrink: 0; }
+    .sheet-nav { display: flex; gap: 1px; margin-right: 8px; align-items: center; height: 24px; }
+    .sheet-nav-btn { width: 18px; height: 17px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: #fff; cursor: default; font-size: 9px; color: var(--text-muted); }
     .sheet-nav-btn:hover { background: var(--gray-200); }
-    #active-sheet-tab { background: #fff; border: 1px solid var(--border-dark); border-bottom: none; padding: 2px 12px; font-size: 11px; color: var(--text); font-weight: 600; }
+    #active-sheet-tab { background: #fff; border: 1px solid var(--border-dark); border-bottom: none; padding: 4px 14px 5px; font-size: 11px; color: var(--green); font-weight: 700; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    /* 입력창 */
-    #input-area { border-top: 2px solid var(--border-dark); display: flex; align-items: stretch; background: var(--gray-100); flex-shrink: 0; height: 44px; }
-    #formula-label { background: var(--gray-600); color: #fff; font-size: 12px; font-weight: 700; font-style: italic; padding: 0 12px; display: flex; align-items: center; border-right: 1px solid var(--gray-700); flex-shrink: 0; }
+    #input-area { border-top: 1px solid var(--border-dark); display: flex; align-items: stretch; background: var(--gray-100); flex-shrink: 0; height: 46px; }
+    #formula-label { background: var(--gray-200); color: var(--gray-700); font-size: 12px; font-weight: 700; font-style: italic; padding: 0 13px; display: flex; align-items: center; border-right: 1px solid var(--border-dark); flex-shrink: 0; }
     #msg-input { flex: 1; min-width: 0; padding: 0 12px; border: none; border-right: 1px solid var(--border-dark); font-size: 13px; font-family: inherit; outline: none; background: #fff; height: 100%; }
-    #msg-input:focus { background: #fafafa; }
-    #send-btn { background: var(--green); color: #fff; border: none; padding: 0 20px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-    #send-btn:hover { background: var(--green-hover); }
+    #msg-input:focus { background: #fff; box-shadow: inset 0 0 0 1px rgba(33,115,70,.35); }
+    #send-btn { background: #fff; color: var(--green); border: none; padding: 0 22px; font-size: 12px; font-weight: 800; font-family: inherit; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    #send-btn:hover { background: var(--green-light); }
 
-    /* 상태바 */
-    #status-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 20px; background: var(--gray-600); display: flex; align-items: center; padding: 0 10px; z-index: 5; }
-    .status-item { font-size: 10px; color: rgba(255,255,255,0.8); white-space: nowrap; margin-right: 16px; }
+    #status-bar { position: absolute; bottom: 0; left: 0; right: 0; height: var(--status-h); background: var(--gray-600); display: flex; align-items: center; padding: 0 10px; z-index: 5; }
+    .status-item { font-size: 10px; color: rgba(255,255,255,0.82); white-space: nowrap; margin-right: 16px; }
     .status-right { margin-left: auto; display: flex; gap: 12px; }
 
     /* 모달 */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.34); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.open { display: flex; }
-    .modal-box { background: #fff; border: 1px solid var(--border-dark); box-shadow: 3px 3px 12px rgba(0,0,0,0.2); width: 100%; max-width: 310px; overflow: hidden; }
-    .modal-title-bar { background: var(--gray-200); color: var(--text); padding: 8px 12px; font-size: 12px; font-weight: 600; border-bottom: 1px solid var(--border); }
+    .modal-box { background: #fff; border: 1px solid var(--border-dark); box-shadow: 0 16px 44px rgba(0,0,0,0.22); width: 100%; max-width: 320px; overflow: hidden; }
+    .modal-title-bar { background: var(--gray-200); color: var(--text); padding: 8px 12px; font-size: 12px; font-weight: 700; border-bottom: 1px solid var(--border); }
     .modal-body { padding: 18px 14px 14px; }
     .field-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
-    .modal-body input { width: 100%; padding: 5px 7px; border: 1px solid var(--border-dark); font-size: 12px; font-family: inherit; outline: none; margin-bottom: 9px; }
-    .modal-body input:focus { border-color: var(--green); outline: 1px solid var(--green); }
+    .modal-body input { width: 100%; padding: 6px 7px; border: 1px solid var(--border-dark); font-size: 12px; font-family: inherit; outline: none; margin-bottom: 9px; }
+    .modal-body input:focus { border-color: var(--green); outline: 1px solid rgba(33,115,70,.25); }
     .modal-hint { font-size: 10px; color: var(--text-muted); margin-bottom: 12px; margin-top: -5px; }
     .modal-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6; }
     .modal-btns { display: flex; gap: 6px; justify-content: flex-end; }
-    .modal-btns button { padding: 4px 16px; font-size: 12px; font-family: inherit; cursor: pointer; }
+    .modal-btns button { padding: 5px 16px; font-size: 12px; font-family: inherit; cursor: pointer; }
     .btn-cancel { background: var(--gray-100); border: 1px solid var(--border-dark); color: var(--text); }
     .btn-cancel:hover { background: var(--gray-200); }
-    .btn-confirm { background: var(--green); border: 1px solid var(--green-hover); color: #fff; font-weight: 600; }
-    .btn-confirm:hover { background: var(--green-hover); }
-    .btn-danger { background: var(--danger); border: 1px solid #922b21; color: #fff; font-weight: 600; }
-    .btn-danger:hover { background: #922b21; }
-    .pw-icon { font-size: 1.4rem; text-align: center; margin-bottom: 6px; }
+    .btn-confirm { background: #fff; border: 1px solid rgba(33,115,70,.5); color: var(--green); font-weight: 800; }
+    .btn-confirm:hover { background: var(--green-light); }
+    .btn-danger { background: #fff; border: 1px solid var(--danger); color: var(--danger); font-weight: 800; }
+    .btn-danger:hover { background: #f8e9e8; }
+    .pw-icon { font-size: 1.4rem; text-align: center; margin-bottom: 6px; filter: grayscale(1); }
     .pw-room { font-weight: 700; text-align: center; margin-bottom: 10px; font-size: 12px; }
     #pw-input { text-align: center; letter-spacing: 3px; }
     #pw-error { font-size: 10px; color: var(--danger); min-height: 14px; margin-bottom: 8px; text-align: center; }
     #sidebar-overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.35); z-index: 9; }
+
+    @media (max-width: 900px) {
+      #app { --top-h: 88px; }
+      #ribbon-content { display: none; }
+      .workbook-mark { min-width: 150px; }
+      .menu-tab { padding: 0 9px; }
+    }
 
     /* 모바일 */
     @media (max-width: 640px) {
       body { align-items: stretch; justify-content: stretch; background: #fff; }
       #login-screen { width: 100%; border: none; box-shadow: none; }
       #login-body { padding: 32px 20px 24px; }
-      #app { width: 100%; height: 100vh; height: 100dvh; border: none; box-shadow: none; }
-      #ribbon-content, #formula-row, #col-header, #sheet-tab-bar, #status-bar { display: none; }
-      .top-height { margin-top: 56px; }
-      #sidebar { width: 260px; position: absolute; top: 56px; bottom: 0; left: 0; transform: translateX(-100%); box-shadow: 4px 0 16px rgba(0,0,0,0.3); }
+      #app { width: 100%; height: 100vh; height: 100dvh; border: none; box-shadow: none; --top-h: 58px; --status-h: 0px; }
+      #formula-row, #col-header, #sheet-tab-bar, #status-bar { display: none; }
+      .top-height { margin-top: var(--top-h); margin-bottom: 0; }
+      #title-center, .win-btns { display: none; }
+      .workbook-mark { min-width: 0; flex: 1; }
+      #sidebar { width: 260px; position: absolute; top: var(--top-h); bottom: 0; left: 0; transform: translateX(-100%); box-shadow: 4px 0 16px rgba(0,0,0,0.25); margin: 0; height: auto; }
       #sidebar.open { transform: translateX(0); }
-      #sidebar-overlay.open { display: block; top: 56px; }
+      #sidebar-overlay.open { display: block; top: var(--top-h); }
       #sidebar-close { display: block; }
       #menu-btn { display: block; }
       #formula-label { display: none; }
-      .cell-sender { width: 56px; min-width: 56px; }
-      .cell-time { width: 44px; min-width: 44px; padding: 3px 4px; }
-      .row-num { width: 26px; min-width: 26px; }
+      .cell-sender { width: 62px; min-width: 62px; }
+      .cell-time { width: 50px; min-width: 50px; padding: 3px 4px; }
+      .row-num { width: 28px; min-width: 28px; }
+      .cell-msg { font-size: 12px; }
+      #send-btn { padding: 0 16px; }
     }
   </style>
 </head>
@@ -238,12 +379,11 @@
 <div id="app">
   <div id="top-bar">
     <div id="title-row">
-      <span class="xl-icon">📊</span>
-      <div class="qat-btn">💾</div>
-      <div class="qat-btn">↩</div>
-      <div class="qat-btn">↪</div>
-      <span class="qat-sep">|</span>
-      <div id="title-center">CHATCHAT.xlsx - Excel</div>
+      <div class="workbook-mark">
+        <span class="xl-file-icon" aria-hidden="true"></span>
+        <span>CHATCHAT.xlsx</span>
+      </div>
+      <div id="title-center">Excel Messenger</div>
       <div class="user-section">
         <div id="user-chip">
           <div class="avatar" id="user-avatar"></div>
@@ -273,97 +413,27 @@
     </div>
 
     <div id="ribbon-content">
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns">
-          <div class="rb-btn-lg"><span class="rb-icon-lg">📋</span><span class="rb-label-lg">붙여넣기</span></div>
-          <div class="rb-divider"></div>
-          <div class="rb-col">
-            <div class="rb-sm"><span>✂️</span> 잘라내기</div>
-            <div class="rb-sm"><span>📄</span> 복사 ▾</div>
-            <div class="rb-sm"><span>🖌️</span> 서식 복사</div>
-          </div>
-        </div>
-        <div class="ribbon-group-label">클립보드 ↗</div>
+      <div class="compact-group">
+        <span class="compact-label">클립보드</span>
+        <span class="tool-chip muted">붙여넣기</span>
+        <span class="tool-chip muted">복사</span>
       </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns">
-          <div class="rb-col" style="gap:3px;">
-            <div class="font-row">
-              <div class="font-box">맑은 고딕</div>
-              <div style="font-size:10px;color:#888;">▾</div>
-              <div class="size-box" style="margin-left:4px;">11</div>
-              <div style="font-size:10px;color:#888;">▾</div>
-              <div class="fmt-btn">가<sup style="color:#c00;font-size:8px;">↑</sup></div>
-              <div class="fmt-btn">가<sub style="color:#666;font-size:8px;">↓</sub></div>
-            </div>
-            <div class="font-row">
-              <div class="fmt-btn" style="font-weight:700;">가</div>
-              <div class="fmt-btn" style="font-style:italic;">가</div>
-              <div class="fmt-btn" style="text-decoration:underline;">가</div>
-              <div class="fmt-btn">⊡</div>
-              <div style="width:1px;background:#ccc;margin:0 2px;"></div>
-              <div class="fmt-btn">🎨▾</div>
-              <div class="fmt-btn">A▾</div>
-            </div>
-          </div>
-        </div>
-        <div class="ribbon-group-label">글꼴 ↗</div>
+      <div class="compact-group">
+        <span class="compact-label">글꼴</span>
+        <span class="tool-chip select">맑은 고딕 ▾</span>
+        <span class="tool-chip small">11</span>
+        <span class="tool-chip small">B</span>
+        <span class="tool-chip small">U</span>
       </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns">
-          <div class="rb-col" style="gap:3px;">
-            <div class="font-row">
-              <div class="fmt-btn">⬆</div><div class="fmt-btn">⬆⬆</div><div class="fmt-btn">↗</div>
-              <div style="width:1px;background:#ccc;margin:0 2px;"></div>
-              <div class="fmt-btn">⤵ 자동 줄 바꿈</div>
-            </div>
-            <div class="font-row">
-              <div class="fmt-btn">≡</div><div class="fmt-btn">☰</div><div class="fmt-btn">≡▸</div>
-              <div style="width:1px;background:#ccc;margin:0 2px;"></div>
-              <div class="fmt-btn">⊞ 병합하고 가운데 맞춤 ▾</div>
-            </div>
-          </div>
-        </div>
-        <div class="ribbon-group-label">맞춤 ↗</div>
+      <div class="compact-group">
+        <span class="compact-label">맞춤</span>
+        <span class="tool-chip small">≡</span>
+        <span class="tool-chip small">☰</span>
+        <span class="tool-chip muted">줄 바꿈</span>
       </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns">
-          <div class="rb-col" style="gap:3px;">
-            <div class="font-box" style="min-width:90px;">일반 ▾</div>
-            <div class="font-row">
-              <div class="fmt-btn">₩▾</div><div class="fmt-btn">%</div><div class="fmt-btn">,</div>
-              <div style="width:1px;background:#ccc;margin:0 2px;"></div>
-              <div class="fmt-btn">.0→</div><div class="fmt-btn">.0←</div>
-            </div>
-          </div>
-        </div>
-        <div class="ribbon-group-label">표시 형식 ↗</div>
-      </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns" style="gap:4px;">
-          <div class="rb-btn"><span class="rb-icon">🎨</span><span class="rb-label">조건부<br>서식 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">📋</span><span class="rb-label">표<br>서식 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon" style="font-size:13px;">■■<br>■■</span><span class="rb-label">셀<br>스타일 ▾</span></div>
-        </div>
-        <div class="ribbon-group-label">스타일</div>
-      </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns" style="gap:4px;">
-          <div class="rb-btn"><span class="rb-icon">➕</span><span class="rb-label">삽입 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">🗑</span><span class="rb-label">삭제 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">⚙</span><span class="rb-label">서식 ▾</span></div>
-        </div>
-        <div class="ribbon-group-label">셀</div>
-      </div>
-      <div class="ribbon-group">
-        <div class="ribbon-group-btns" style="gap:4px;">
-          <div class="rb-btn"><span class="rb-icon">Σ</span><span class="rb-label">자동합계 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">↓</span><span class="rb-label">채우기 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">🗑</span><span class="rb-label">지우기 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">↕</span><span class="rb-label">정렬/필터 ▾</span></div>
-          <div class="rb-btn"><span class="rb-icon">🔍</span><span class="rb-label">찾기/<br>선택 ▾</span></div>
-        </div>
-        <div class="ribbon-group-label">편집</div>
+      <div class="compact-group">
+        <span class="compact-label">채팅</span>
+        <span class="tool-chip functional">실제 기능은 초록 텍스트</span>
       </div>
     </div>
 
