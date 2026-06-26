@@ -19,7 +19,6 @@
       --xl-sidebar-text: #e8f4ec;
       --xl-text: #1a1a1a;
       --xl-text-muted: #595959;
-      --xl-input: #ffffff;
       --xl-row-even: #ffffff;
       --xl-row-odd: #f2f2f2;
       --xl-danger: #c0392b;
@@ -34,30 +33,69 @@
     #login-title-bar { background: var(--xl-green); color: #fff; padding: 10px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     #login-body { padding: 28px 24px 24px; }
     #login-body .field-label { font-size: 12px; color: var(--xl-text-muted); margin-bottom: 4px; font-weight: 500; }
-    #login-body input { width: 100%; padding: 6px 8px; border: 1px solid var(--xl-border-dark); font-size: 13px; font-family: inherit; outline: none; background: var(--xl-input); margin-bottom: 14px; }
+    #login-body input { width: 100%; padding: 6px 8px; border: 1px solid var(--xl-border-dark); font-size: 13px; font-family: inherit; outline: none; margin-bottom: 14px; }
     #login-body input:focus { border-color: var(--xl-green); outline: 2px solid rgba(33,115,70,0.2); }
-    #login-btn { background: var(--xl-green); color: #fff; border: 1px solid var(--xl-green-dark); padding: 6px 20px; font-size: 13px; font-family: inherit; cursor: pointer; font-weight: 600; transition: background .15s; }
+    #login-btn { background: var(--xl-green); color: #fff; border: 1px solid var(--xl-green-dark); padding: 6px 20px; font-size: 13px; font-family: inherit; cursor: pointer; font-weight: 600; }
     #login-btn:hover { background: var(--xl-green-dark); }
 
     /* 앱 */
-    #app { display: none; width: 980px; height: 640px; border: 1px solid var(--xl-border-dark); box-shadow: 4px 4px 16px rgba(0,0,0,0.3); flex-direction: row; background: #fff; position: relative; overflow: hidden; }
+    #app { display: none; width: 980px; height: 700px; border: 1px solid var(--xl-border-dark); box-shadow: 4px 4px 16px rgba(0,0,0,0.3); flex-direction: row; background: #fff; position: relative; overflow: hidden; }
     #app.visible { display: flex; }
 
-    /* 리본 */
-    #ribbon { position: absolute; top: 0; left: 0; right: 0; height: 36px; background: var(--xl-green); display: flex; align-items: center; padding: 0 12px; z-index: 20; }
-    #ribbon .app-name { color: #fff; font-weight: 700; font-size: 13px; letter-spacing: .04em; margin-right: 20px; }
-    .ribbon-tab { color: rgba(255,255,255,0.85); font-size: 12px; padding: 0 12px; height: 36px; display: flex; align-items: center; cursor: pointer; transition: background .15s; }
-    .ribbon-tab:hover { background: rgba(255,255,255,0.12); }
-    .ribbon-tab.active { background: #fff; color: var(--xl-green); font-weight: 600; }
-    #ribbon-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    #user-chip { background: rgba(255,255,255,0.18); color: #fff; border-radius: 2px; padding: 3px 10px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
-    #user-chip .avatar { width: 18px; height: 18px; background: rgba(255,255,255,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-    #logout-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 3px 10px; font-size: 11px; font-family: inherit; cursor: pointer; border-radius: 2px; transition: background .15s; }
+    /* 상단 전체 */
+    #top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 20; }
+
+    /* 1행: 타이틀 */
+    #title-row { background: var(--xl-green); height: 30px; display: flex; align-items: center; padding: 0 12px; gap: 12px; }
+    #title-row .app-icon { font-size: 14px; }
+    #title-row .app-name { color: #fff; font-weight: 700; font-size: 12px; letter-spacing: .04em; flex: 1; }
+    #title-row .win-btns { display: flex; }
+    .win-btn { width: 28px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: rgba(255,255,255,0.85); cursor: pointer; transition: background .1s; }
+    .win-btn:hover { background: rgba(255,255,255,0.2); }
+    .win-btn.close:hover { background: #c0392b; }
+    .user-section { display: flex; align-items: center; gap: 8px; margin-right: 8px; }
+    #user-chip { background: rgba(255,255,255,0.18); color: #fff; padding: 2px 8px; font-size: 11px; display: flex; align-items: center; gap: 5px; border-radius: 2px; }
+    #user-chip .avatar { width: 16px; height: 16px; background: rgba(255,255,255,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+    #logout-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 2px 8px; font-size: 11px; font-family: inherit; cursor: pointer; border-radius: 2px; }
     #logout-btn:hover { background: rgba(255,255,255,0.28); }
-    #menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; padding: 4px 8px; }
+    #menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1rem; cursor: pointer; padding: 2px 6px; }
+
+    /* 2행: 메뉴바 */
+    #menu-row { background: var(--xl-green); height: 22px; display: flex; align-items: center; padding: 0 8px; border-top: 1px solid rgba(255,255,255,0.15); }
+    .menu-item { color: rgba(255,255,255,0.88); font-size: 12px; padding: 0 8px; height: 22px; display: flex; align-items: center; cursor: default; white-space: nowrap; }
+    .menu-item:hover { background: rgba(255,255,255,0.15); }
+
+    /* 3행: 리본 탭 */
+    #ribbon-tabs { background: #e8f0e9; height: 24px; display: flex; align-items: flex-end; padding: 0 8px; border-bottom: 2px solid var(--xl-green); }
+    .ribbon-tab { font-size: 12px; padding: 0 14px; height: 22px; display: flex; align-items: center; cursor: default; color: #333; border: 1px solid transparent; border-bottom: none; white-space: nowrap; }
+    .ribbon-tab:hover { background: #fff; color: #111; }
+    .ribbon-tab.active { background: #fff; color: var(--xl-green); font-weight: 600; border-color: var(--xl-border-dark); border-bottom: 2px solid #fff; margin-bottom: -2px; }
+
+    /* 4행: 리본 컨텐츠 */
+    #ribbon-content { background: #fff; border-bottom: 2px solid var(--xl-border-dark); padding: 4px 12px; display: flex; align-items: center; gap: 16px; min-height: 56px; }
+    .ribbon-group { display: flex; flex-direction: column; align-items: center; border-right: 1px solid var(--xl-border); padding-right: 16px; }
+    .ribbon-group:last-child { border-right: none; }
+    .ribbon-group-btns { display: flex; gap: 2px; margin-bottom: 2px; }
+    .ribbon-group-label { font-size: 10px; color: var(--xl-text-muted); margin-top: 2px; }
+    .rb-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 3px 6px; cursor: default; border: 1px solid transparent; border-radius: 2px; min-width: 36px; }
+    .rb-btn:hover { background: var(--xl-green-light); border-color: #b8dfca; }
+    .rb-btn .rb-icon { font-size: 16px; line-height: 1; }
+    .rb-btn .rb-label { font-size: 10px; color: var(--xl-text); white-space: nowrap; }
+    .rb-btn-sm { display: flex; align-items: center; gap: 4px; padding: 2px 6px; cursor: default; border: 1px solid transparent; border-radius: 2px; font-size: 11px; color: var(--xl-text); }
+    .rb-btn-sm:hover { background: var(--xl-green-light); border-color: #b8dfca; }
+    .rb-icon-sm { font-size: 12px; }
+    .rb-divider { width: 1px; background: var(--xl-border); height: 40px; margin: 0 4px; }
+
+    /* 5행: 수식 입력줄 */
+    #formula-row { background: #fff; height: 24px; display: flex; align-items: center; border-bottom: 1px solid var(--xl-border-dark); }
+    #name-box { width: 80px; border-right: 1px solid var(--xl-border-dark); padding: 0 8px; font-size: 12px; color: var(--xl-text); height: 100%; display: flex; align-items: center; flex-shrink: 0; }
+    #formula-fx { width: 32px; border-right: 1px solid var(--xl-border); padding: 0 8px; font-size: 12px; font-style: italic; color: var(--xl-green); height: 100%; display: flex; align-items: center; flex-shrink: 0; font-weight: 700; }
+    #formula-display { flex: 1; padding: 0 8px; font-size: 12px; color: var(--xl-text-muted); height: 100%; display: flex; align-items: center; font-style: italic; }
+
+    .top-height { margin-top: 158px; }
 
     /* 사이드바 */
-    #sidebar { width: 200px; flex-shrink: 0; background: var(--xl-sidebar); display: flex; flex-direction: column; margin-top: 36px; border-right: 2px solid var(--xl-green-dark); position: relative; z-index: 10; transition: transform .25s ease; }
+    #sidebar { width: 200px; flex-shrink: 0; background: var(--xl-sidebar); display: flex; flex-direction: column; position: relative; z-index: 10; transition: transform .25s ease; }
     #sidebar-header { background: var(--xl-sidebar-active); padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; }
     #sidebar-header .label { color: var(--xl-sidebar-text); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
     #sidebar-close { display: none; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1rem; cursor: pointer; }
@@ -75,48 +113,39 @@
     .room-action-btn { background: none; border: none; cursor: pointer; font-size: 0.75rem; padding: 2px 3px; color: rgba(255,255,255,0.5); border-radius: 2px; }
     .room-action-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
     .room-action-btn.del:hover { background: rgba(192,57,43,0.4); color: #ffaaaa; }
-    #add-room-btn { margin: 8px; padding: 6px 10px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.25); color: rgba(255,255,255,0.65); font-size: 12px; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .15s; }
+    #add-room-btn { margin: 8px; padding: 6px 10px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.25); color: rgba(255,255,255,0.65); font-size: 12px; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     #add-room-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
-    /* 채팅 영역 */
-    #chat-area { flex: 1; display: flex; flex-direction: column; margin-top: 36px; background: #fff; min-width: 0; }
-    #chat-col-header { background: var(--xl-row-odd); border-bottom: 2px solid var(--xl-border-dark); padding: 0 12px; display: flex; align-items: center; gap: 12px; height: 34px; flex-shrink: 0; border-top: 1px solid var(--xl-border); }
+    /* 채팅 */
+    #chat-area { flex: 1; display: flex; flex-direction: column; background: #fff; min-width: 0; }
+    #chat-col-header { background: var(--xl-row-odd); border-bottom: 2px solid var(--xl-border-dark); padding: 0 12px; display: flex; align-items: center; gap: 12px; height: 28px; flex-shrink: 0; border-top: 1px solid var(--xl-border); }
     #chat-col-header .col-room { font-weight: 700; font-size: 12px; color: var(--xl-text); flex: 1; }
     #online-count { font-size: 11px; color: var(--xl-text-muted); background: var(--xl-green-light); border: 1px solid #b8dfca; padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-
-    /* 메시지 목록 */
     #messages { flex: 1; overflow-y: auto; background: #fff; -webkit-overflow-scrolling: touch; }
     #messages::-webkit-scrollbar { width: 10px; }
     #messages::-webkit-scrollbar-track { background: #f2f2f2; border-left: 1px solid var(--xl-border); }
     #messages::-webkit-scrollbar-thumb { background: #c0c0c0; border: 2px solid #f2f2f2; }
-
-    .msg-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--xl-border); min-height: 28px; }
+    .msg-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--xl-border); min-height: 26px; }
     .msg-row:nth-child(even) { background: var(--xl-row-odd); }
     .msg-row:nth-child(odd) { background: var(--xl-row-even); }
     .msg-row:hover { background: #e8f4ec; }
-
-    .row-num { width: 36px; min-width: 36px; background: var(--xl-row-odd); border-right: 1px solid var(--xl-border-dark); color: var(--xl-text-muted); font-size: 11px; text-align: center; padding: 6px 4px; display: flex; align-items: center; justify-content: center; }
+    .row-num { width: 36px; min-width: 36px; background: var(--xl-row-odd); border-right: 1px solid var(--xl-border-dark); color: var(--xl-text-muted); font-size: 11px; display: flex; align-items: center; justify-content: center; }
     .msg-row:hover .row-num { background: #d4edda; color: var(--xl-green); }
-
-    .cell-time { width: 64px; min-width: 64px; border-right: 1px solid var(--xl-border); padding: 6px 8px; font-size: 11px; color: var(--xl-text-muted); display: flex; align-items: center; }
-    .cell-sender { width: 80px; min-width: 80px; border-right: 1px solid var(--xl-border); padding: 6px 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; overflow: hidden; }
+    .cell-time { width: 64px; min-width: 64px; border-right: 1px solid var(--xl-border); padding: 5px 8px; font-size: 11px; color: var(--xl-text-muted); display: flex; align-items: center; }
+    .cell-sender { width: 80px; min-width: 80px; border-right: 1px solid var(--xl-border); padding: 5px 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; overflow: hidden; }
     .cell-sender.me { color: var(--xl-green); }
     .cell-sender.other { color: #1a5276; }
     .cell-sender.system-sender { color: var(--xl-system); font-weight: 400; font-style: italic; }
-    .cell-msg { flex: 1; padding: 6px 10px; font-size: 13px; color: var(--xl-text); word-break: break-word; line-height: 1.5; display: flex; align-items: center; }
+    .cell-msg { flex: 1; padding: 5px 10px; font-size: 13px; color: var(--xl-text); word-break: break-word; line-height: 1.5; display: flex; align-items: center; }
     .cell-msg.me { background: #e8f5e9; color: #276221; }
     .cell-msg.system-msg-cell { color: var(--xl-system); font-style: italic; font-size: 11px; }
-
     #no-room-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--xl-text-muted); gap: 12px; }
     #no-room-state .xl-logo { font-size: 3rem; }
-    #no-room-state p { font-size: 13px; }
-
-    /* 입력 영역 */
     #input-area { border-top: 2px solid var(--xl-border-dark); display: flex; align-items: center; background: var(--xl-row-odd); flex-shrink: 0; }
-    #formula-label { background: var(--xl-green); color: #fff; font-size: 12px; font-weight: 700; padding: 0 12px; height: 36px; display: flex; align-items: center; border-right: 1px solid var(--xl-green-dark); white-space: nowrap; flex-shrink: 0; }
-    #msg-input { flex: 1; min-width: 0; padding: 7px 10px; border: none; border-right: 1px solid var(--xl-border-dark); font-size: 13px; font-family: inherit; outline: none; background: #fff; height: 36px; }
+    #formula-label { background: var(--xl-green); color: #fff; font-size: 12px; font-weight: 700; padding: 0 12px; height: 34px; display: flex; align-items: center; border-right: 1px solid var(--xl-green-dark); flex-shrink: 0; }
+    #msg-input { flex: 1; min-width: 0; padding: 7px 10px; border: none; border-right: 1px solid var(--xl-border-dark); font-size: 13px; font-family: inherit; outline: none; background: #fff; height: 34px; }
     #msg-input:focus { background: #f0fff4; }
-    #send-btn { background: var(--xl-green); color: #fff; border: none; padding: 0 18px; height: 36px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background .15s; }
+    #send-btn { background: var(--xl-green); color: #fff; border: none; padding: 0 18px; height: 34px; font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
     #send-btn:hover { background: var(--xl-green-dark); }
 
     /* 모달 */
@@ -138,7 +167,6 @@
     .btn-confirm:hover { background: var(--xl-green-dark); }
     .btn-danger { background: var(--xl-danger); border: 1px solid #922b21; color: #fff; font-weight: 600; }
     .btn-danger:hover { background: #922b21; }
-
     #pw-modal .pw-icon { font-size: 1.6rem; text-align: center; margin-bottom: 6px; }
     #pw-modal .pw-room { font-weight: 700; text-align: center; margin-bottom: 12px; font-size: 13px; }
     #pw-input { text-align: center; letter-spacing: 3px; }
@@ -152,26 +180,25 @@
       #login-screen { width: 100%; border: none; box-shadow: none; }
       #login-body { padding: 32px 20px 24px; }
       #app { width: 100%; height: 100vh; height: 100dvh; border: none; box-shadow: none; }
-      #sidebar { width: 260px; position: absolute; top: 36px; bottom: 0; left: 0; transform: translateX(-100%); box-shadow: 4px 0 16px rgba(0,0,0,0.3); margin-top: 0; }
+      #ribbon-content, #ribbon-tabs, #formula-row { display: none; }
+      .top-height { margin-top: 52px; }
+      #sidebar { width: 260px; position: absolute; top: 52px; bottom: 0; left: 0; transform: translateX(-100%); box-shadow: 4px 0 16px rgba(0,0,0,0.3); }
       #sidebar.open { transform: translateX(0); }
-      #sidebar-overlay.open { display: block; top: 36px; }
+      #sidebar-overlay.open { display: block; top: 52px; }
       #sidebar-close { display: block; }
-      #chat-area { margin-top: 0; }
       #menu-btn { display: block; }
       #formula-label { display: none; }
       #send-btn { padding: 0 14px; }
-      .cell-sender { width: 60px; min-width: 60px; font-size: 11px; }
-      .cell-time { width: 48px; min-width: 48px; font-size: 10px; }
-      .row-num { width: 28px; min-width: 28px; font-size: 10px; }
+      .cell-sender { width: 56px; min-width: 56px; font-size: 11px; }
+      .cell-time { width: 44px; min-width: 44px; font-size: 10px; padding: 5px 4px; }
+      .row-num { width: 26px; min-width: 26px; font-size: 10px; }
     }
   </style>
 </head>
 <body>
 
 <div id="login-screen">
-  <div id="login-title-bar">
-    <span>📊</span> CHATCHAT — Microsoft Excel
-  </div>
+  <div id="login-title-bar"><span>📊</span> CHATCHAT — Microsoft Excel</div>
   <div id="login-body">
     <div class="field-label">사용자 이름</div>
     <input type="text" id="nickname-input" placeholder="닉네임 입력 (예: 엄마, 밍구)" maxlength="10"/>
@@ -180,24 +207,143 @@
 </div>
 
 <div id="app">
-  <div id="ribbon">
-    <span class="app-name">📊 CHATCHAT</span>
-    <span class="ribbon-tab active">홈</span>
-    <span class="ribbon-tab">보기</span>
-    <span class="ribbon-tab">채팅방</span>
-    <div id="ribbon-right">
-      <div id="user-chip">
-        <div class="avatar" id="user-avatar"></div>
-        <span id="user-name-display"></span>
+  <div id="top-bar">
+    <div id="title-row">
+      <span class="app-icon">📊</span>
+      <span class="app-name">CHATCHAT.xlsx - Microsoft Excel</span>
+      <div class="user-section">
+        <div id="user-chip">
+          <div class="avatar" id="user-avatar"></div>
+          <span id="user-name-display"></span>
+        </div>
+        <button id="logout-btn">로그아웃</button>
+        <button id="menu-btn">☰</button>
       </div>
-      <button id="logout-btn">로그아웃</button>
-      <button id="menu-btn">☰</button>
+      <div class="win-btns">
+        <div class="win-btn">─</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn close">✕</div>
+      </div>
+    </div>
+
+    <div id="menu-row">
+      <span class="menu-item">파일(F)</span>
+      <span class="menu-item">홈(H)</span>
+      <span class="menu-item">삽입(N)</span>
+      <span class="menu-item">페이지 레이아웃(P)</span>
+      <span class="menu-item">수식(M)</span>
+      <span class="menu-item">데이터(A)</span>
+      <span class="menu-item">검토(R)</span>
+      <span class="menu-item">보기(W)</span>
+      <span class="menu-item">도움말(H)</span>
+    </div>
+
+    <div id="ribbon-tabs">
+      <div class="ribbon-tab active">홈</div>
+      <div class="ribbon-tab">삽입</div>
+      <div class="ribbon-tab">페이지 레이아웃</div>
+      <div class="ribbon-tab">수식</div>
+      <div class="ribbon-tab">데이터</div>
+      <div class="ribbon-tab">검토</div>
+      <div class="ribbon-tab">보기</div>
+    </div>
+
+    <div id="ribbon-content">
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn"><span class="rb-icon">📋</span><span class="rb-label">붙여넣기</span></div>
+          <div class="rb-divider"></div>
+          <div style="display:flex;flex-direction:column;gap:1px;">
+            <div class="rb-btn-sm"><span class="rb-icon-sm">✂️</span> 잘라내기</div>
+            <div class="rb-btn-sm"><span class="rb-icon-sm">📄</span> 복사</div>
+            <div class="rb-btn-sm"><span class="rb-icon-sm">🖌️</span> 서식 복사</div>
+          </div>
+        </div>
+        <span class="ribbon-group-label">클립보드</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn-sm" style="flex-direction:column;align-items:flex-start;gap:3px;">
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span style="font-size:12px;">Noto Sans KR</span>
+              <span style="font-size:10px;color:#888;">▼</span>
+              <span style="font-size:12px;margin-left:8px;">11</span>
+              <span style="font-size:10px;color:#888;">▼</span>
+            </div>
+            <div style="display:flex;gap:2px;align-items:center;">
+              <span style="font-weight:700;font-size:13px;padding:1px 4px;border:1px solid #ccc;cursor:default;">B</span>
+              <span style="font-style:italic;font-size:13px;padding:1px 4px;border:1px solid #ccc;cursor:default;">I</span>
+              <span style="text-decoration:underline;font-size:13px;padding:1px 4px;border:1px solid #ccc;cursor:default;">U</span>
+              <span style="font-size:11px;padding:1px 6px;border:1px solid #ccc;cursor:default;">⊞</span>
+              <span style="font-size:11px;padding:1px 6px;border:1px solid #ccc;cursor:default;">A▼</span>
+            </div>
+          </div>
+        </div>
+        <span class="ribbon-group-label">글꼴</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns" style="gap:4px;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="display:flex;gap:2px;">
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">≡</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">≡</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">≡</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">↵</span>
+            </div>
+            <div style="display:flex;gap:2px;">
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">⬅</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">⬛</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">➡</span>
+              <span style="font-size:11px;padding:2px 6px;border:1px solid #ccc;cursor:default;">⬇</span>
+            </div>
+          </div>
+        </div>
+        <span class="ribbon-group-label">맞춤</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn"><span class="rb-icon">💰</span><span class="rb-label">통화</span></div>
+          <div class="rb-btn"><span class="rb-icon">%</span><span class="rb-label">백분율</span></div>
+          <div class="rb-btn"><span class="rb-icon">,</span><span class="rb-label">쉼표</span></div>
+        </div>
+        <span class="ribbon-group-label">표시 형식</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn"><span class="rb-icon">🎨</span><span class="rb-label">조건부서식</span></div>
+          <div class="rb-btn"><span class="rb-icon">📊</span><span class="rb-label">표서식</span></div>
+          <div class="rb-btn"><span class="rb-icon">🖍️</span><span class="rb-label">셀스타일</span></div>
+        </div>
+        <span class="ribbon-group-label">스타일</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn"><span class="rb-icon">➕</span><span class="rb-label">삽입</span></div>
+          <div class="rb-btn"><span class="rb-icon">🗑️</span><span class="rb-label">삭제</span></div>
+          <div class="rb-btn"><span class="rb-icon">⚙️</span><span class="rb-label">서식</span></div>
+        </div>
+        <span class="ribbon-group-label">셀</span>
+      </div>
+      <div class="ribbon-group">
+        <div class="ribbon-group-btns">
+          <div class="rb-btn"><span class="rb-icon">Σ</span><span class="rb-label">자동합계</span></div>
+          <div class="rb-btn"><span class="rb-icon">↓</span><span class="rb-label">채우기</span></div>
+          <div class="rb-btn"><span class="rb-icon">🔍</span><span class="rb-label">정렬/필터</span></div>
+        </div>
+        <span class="ribbon-group-label">편집</span>
+      </div>
+    </div>
+
+    <div id="formula-row">
+      <div id="name-box">A1</div>
+      <div id="formula-fx">fx</div>
+      <div id="formula-display"></div>
     </div>
   </div>
 
   <div id="sidebar-overlay"></div>
 
-  <div id="sidebar">
+  <div id="sidebar" class="top-height">
     <div id="sidebar-header">
       <span class="label">시트 목록</span>
       <button id="sidebar-close">✕</button>
@@ -206,7 +352,7 @@
     <button id="add-room-btn">＋ 새 시트 추가</button>
   </div>
 
-  <div id="chat-area">
+  <div id="chat-area" class="top-height">
     <div id="chat-col-header">
       <span class="col-room" id="current-room-name">시트를 선택하세요</span>
       <div id="online-count" style="display:none"></div>
@@ -363,16 +509,11 @@
     document.getElementById('login-screen').style.display = '';
     document.getElementById('nickname-input').value = '';
     document.getElementById('room-list').innerHTML = '';
-    resetChat();
-    closeSidebar();
+    resetChat(); closeSidebar();
   });
 
   function resetChat() {
-    document.getElementById('messages').innerHTML = `
-      <div id="no-room-state">
-        <div class="xl-logo">📊</div>
-        <p>왼쪽에서 시트(채팅방)를 선택하거나 추가하세요</p>
-      </div>`;
+    document.getElementById('messages').innerHTML = `<div id="no-room-state"><div class="xl-logo">📊</div><p>왼쪽에서 시트(채팅방)를 선택하거나 추가하세요</p></div>`;
     document.getElementById('input-area').style.display = 'none';
     document.getElementById('current-room-name').textContent = '시트를 선택하세요';
     document.getElementById('online-count').style.display = 'none';
@@ -394,8 +535,8 @@
           <span class="room-label">${escHtml(room.name)}</span>
           ${room.password ? '<span class="lock-icon">🔒</span>' : ''}
           <span class="room-actions">
-            <button class="room-action-btn edit" title="설정">⚙️</button>
-            <button class="room-action-btn del" title="삭제">🗑️</button>
+            <button class="room-action-btn edit">⚙️</button>
+            <button class="room-action-btn del">🗑️</button>
           </span>`;
         item.querySelector('.edit').addEventListener('click', e => { e.stopPropagation(); openEditModal(id, room); });
         item.querySelector('.del').addEventListener('click', e => { e.stopPropagation(); openDelModal(id, room); });
@@ -444,6 +585,7 @@
     document.getElementById('current-room-name').textContent = `${room.emoji || '📋'} ${room.name}`;
     document.getElementById('online-count').style.display = '';
     document.getElementById('input-area').style.display = 'flex';
+    document.getElementById('formula-display').textContent = `= "${room.name}"`;
 
     presenceRef = ref(db, `presence/${roomId}/${currentUser}`);
     set(presenceRef, true);
