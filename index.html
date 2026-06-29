@@ -592,6 +592,8 @@
   let currentUser = null, currentRoomId = null, messageListener = null;
   let presenceRef = null, pendingRoom = null, editingRoomId = null, deletingRoomId = null;
   let rowCounter = 1;
+  let roomMessagesReady = false;
+  let latestMessageTs = 0;
 
   const fmt = ts => ts ? new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
   const escHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -600,6 +602,32 @@
     if (!pw) return '';
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function requestNotificationPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'default') return;
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.warn('알림 권한 요청 실패:', error);
+    }
+  }
+
+  function showNewMessageNotification(sender) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    const notification = new Notification('새 메시지가 왔습니다', {
+      body: sender ? `${sender}님의 새 메시지` : '채팅방을 확인해 주세요.',
+      tag: currentRoomId ? `chatchat-${currentRoomId}` : 'chatchat-new-message',
+      silent: false
+    });
+
+    notification.onclick = () => {
+      window.focus();
+      notification.close();
+    };
   }
 
   const openModal = id => document.getElementById(id).classList.add('open');
@@ -622,6 +650,7 @@
   function login() {
     const name = document.getElementById('nickname-input').value.trim();
     if (!name) return;
+    requestNotificationPermission();
     currentUser = name;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
@@ -711,6 +740,8 @@
   function enterRoom(roomId, room) {
     if (presenceRef) remove(presenceRef);
     currentRoomId = roomId; rowCounter = 1;
+    roomMessagesReady = false;
+    latestMessageTs = 0;
     document.querySelectorAll('.room-item').forEach(el => el.classList.toggle('active', el.dataset.id === roomId));
     document.getElementById('current-room-name').textContent = `${room.emoji || '📋'} ${room.name}`;
     document.getElementById('active-sheet-tab').textContent = room.name;
@@ -737,12 +768,23 @@
       rowCounter = 1;
       if (!snap.exists()) {
         messagesDiv.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:12px;">데이터가 없습니다. 첫 메시지를 입력하세요.</div>`;
+        roomMessagesReady = true;
+        latestMessageTs = 0;
         return;
       }
+      let newestTs = 0;
+      let shouldNotify = false;
+      let notificationSender = '';
       snap.forEach(child => {
         const msg = child.val();
         const isMe = msg.sender === currentUser;
         const isSystem = msg.type === 'system';
+        const msgTs = Number(msg.ts) || 0;
+        newestTs = Math.max(newestTs, msgTs);
+        if (roomMessagesReady && msgTs > latestMessageTs && !isSystem && !isMe) {
+          shouldNotify = true;
+          notificationSender = msg.sender || '';
+        }
         const row = document.createElement('div');
         row.className = 'msg-row';
         if (isSystem) {
@@ -761,6 +803,9 @@
         messagesDiv.appendChild(row);
       });
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      if (shouldNotify) showNewMessageNotification(notificationSender);
+      latestMessageTs = newestTs;
+      roomMessagesReady = true;
     });
 
     push(ref(db, `messages/${roomId}`), { type: 'system', text: `${currentUser}님이 입장했습니다`, ts: Date.now() });
