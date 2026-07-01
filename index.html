@@ -594,6 +594,9 @@
   let rowCounter = 1;
   let roomMessagesReady = false;
   let latestMessageTs = 0;
+  let isComposingMessage = false;
+  let sendAfterComposition = false;
+  let lastCompositionSendAt = 0;
 
   const fmt = ts => ts ? new Date(ts).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '';
   const escHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -811,15 +814,38 @@
     push(ref(db, `messages/${roomId}`), { type: 'system', text: `${currentUser}님이 입장했습니다`, ts: Date.now() });
   }
 
+  const msgInput = document.getElementById('msg-input');
   document.getElementById('send-btn').addEventListener('click', sendMsg);
-  document.getElementById('msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+  msgInput.addEventListener('compositionstart', () => { isComposingMessage = true; });
+  msgInput.addEventListener('compositionend', () => {
+    setTimeout(() => {
+      isComposingMessage = false;
+      if (sendAfterComposition) {
+        sendAfterComposition = false;
+        lastCompositionSendAt = Date.now();
+        sendMsg();
+      }
+    }, 0);
+  });
+  msgInput.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (e.isComposing || isComposingMessage || e.keyCode === 229) {
+      sendAfterComposition = true;
+      return;
+    }
+    if (Date.now() - lastCompositionSendAt < 120) {
+      e.preventDefault();
+      return;
+    }
+    e.preventDefault();
+    sendMsg();
+  });
 
   function sendMsg() {
-    const input = document.getElementById('msg-input');
-    const text = input.value.trim();
+    const text = msgInput.value.trim();
     if (!text || !currentRoomId) return;
     push(ref(db, `messages/${currentRoomId}`), { sender: currentUser, text, ts: Date.now() });
-    input.value = '';
+    msgInput.value = '';
   }
 
   document.getElementById('add-room-btn').addEventListener('click', () => {
